@@ -27,7 +27,7 @@ module.exports.getUser = (req, res) => {
       }
       return res.send({ data: user });
     })
-    .catch(() => res.status(ERROR_CODE_SERVER_ERROR).send({ message: 'Ошибка' }));
+    .catch(() => res.status(ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка' }));
 };
 
 module.exports.createUser = (req, res) => {
@@ -47,16 +47,8 @@ module.exports.createUser = (req, res) => {
 
 module.exports.updateProfile = (req, res) => {
   const { name, about } = req.body;
-  User.findByIdAndUpdate(req.user._id, { name, about })
-    // .then((user) => res.status(200).send(user))
-    .then((user) => {
-      if (user === null) {
-        return res
-          .status(ERROR_CODE_NOT_FOUND)
-          .send({ message: `Пользователь с id: ${req.user._id} не найден.` });
-      }
-      return res.send(user);
-    })
+  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true })
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res.status(ERROR_CODE_BAD_REQUEST).send({
@@ -69,10 +61,8 @@ module.exports.updateProfile = (req, res) => {
 
 module.exports.updateAvatar = (req, res) => {
   const { avatar } = req.body;
-  User.findByIdAndUpdate(req.user._id, { avatar })
-    .then((user) => {
-      res.status(200).send(user);
-    })
+  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true })
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res.status(ERROR_CODE_BAD_REQUEST).send({
