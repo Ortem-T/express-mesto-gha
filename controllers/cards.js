@@ -33,7 +33,6 @@ module.exports.getCards = (req, res) => {
 
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
-    // .then(() => res.status(200).send({ message: 'Карточка удалена' }))
     .then((card) => {
       if (!card) {
         res.status(ERROR_CODE_NOT_FOUND).send({ message: 'Карточка с указанным _id не найдена' });
