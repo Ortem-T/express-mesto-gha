@@ -51,11 +51,10 @@ module.exports.updateProfile = (req, res) => {
     .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(ERROR_CODE_BAD_REQUEST).send({
-          message: 'Переданы некорректные данные.',
-        });
+        res.status(ERROR_CODE_BAD_REQUEST).send({ message: 'Переданы некорректные данные.' });
+        return;
       }
-      return res.status(ERROR_CODE_SERVER_ERROR).send({ message: 'Ошибка' });
+      res.status(ERROR_CODE_SERVER_ERROR).send({ message: 'Ошибка' });
     });
 };
 
@@ -65,10 +64,9 @@ module.exports.updateAvatar = (req, res) => {
     .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(ERROR_CODE_BAD_REQUEST).send({
-          message: 'Переданы некорректные данные.',
-        });
+        res.status(ERROR_CODE_BAD_REQUEST).send({ message: 'Переданы некорректные данные.' });
+        return;
       }
-      return res.status(ERROR_CODE_SERVER_ERROR).send({ message: 'Ошибка' });
+      res.status(ERROR_CODE_SERVER_ERROR).send({ message: 'Ошибка' });
     });
 };
