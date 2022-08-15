@@ -22,7 +22,7 @@ app.use('/', require('./routes/users'));
 app.use('/', require('./routes/cards'));
 
 app.use('*', (req, res) => {
-  res.status(404).send({ message: 'Что-то пошло не так!' });
+  res.status(404).send({ message: 'Указанный роут не существует!' });
 });
 
 app.listen(PORT);

@@ -7,14 +7,7 @@ const ERROR_CODE_SERVER_ERROR = 500;
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send(users))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return res.status(ERROR_CODE_BAD_REQUEST).send({
-          message: 'Переданы некорректные данные.',
-        });
-      }
-      return res.status(ERROR_CODE_SERVER_ERROR).send({ message: 'Ошибка' });
-    });
+    .catch(() => res.status(ERROR_CODE_SERVER_ERROR).send({ message: 'Ошибка' }));
 };
 
 module.exports.getUser = (req, res) => {
@@ -27,7 +20,14 @@ module.exports.getUser = (req, res) => {
       }
       return res.send({ data: user });
     })
-    .catch(() => res.status(ERROR_CODE_BAD_REQUEST).send({ message: 'Ошибка' }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res.status(ERROR_CODE_BAD_REQUEST).send({
+          message: 'Переданы некорректные данные.',
+        });
+      }
+      return res.status(ERROR_CODE_SERVER_ERROR).send({ message: 'Ошибка' });
+    });
 };
 
 module.exports.createUser = (req, res) => {

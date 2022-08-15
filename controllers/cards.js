@@ -21,14 +21,7 @@ module.exports.createCard = (req, res) => {
 module.exports.getCards = (req, res) => {
   Card.find({})
     .then((cards) => res.send({ data: cards }))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return res.status(ERROR_CODE_BAD_REQUEST).send({
-          message: 'Переданы некорректные данные.',
-        });
-      }
-      return res.status(ERROR_CODE_SERVER_ERROR).send({ message: 'Ошибка' });
-    });
+    .catch(() => res.status(ERROR_CODE_SERVER_ERROR).send({ message: 'Ошибка' }));
 };
 
 module.exports.deleteCard = (req, res) => {
