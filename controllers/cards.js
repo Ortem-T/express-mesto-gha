@@ -6,7 +6,7 @@ const ERROR_CODE_SERVER_ERROR = 500;
 
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
-  Card.create({ name, link })
+  Card.create({ name, link, owner: req.user._id })
     .then((card) => res.status(200).send({ data: card }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -56,7 +56,7 @@ module.exports.likeCard = (req, res) => {
       return res.send({ data: card });
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
         return res.status(ERROR_CODE_BAD_REQUEST).send({
           message: 'Переданы некорректные данные.',
         });
@@ -78,7 +78,7 @@ module.exports.dislikeCard = (req, res) => {
       return res.send({ data: card });
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
         return res.status(ERROR_CODE_BAD_REQUEST).send({
           message: 'Переданы некорректные данные.',
         });
