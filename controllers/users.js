@@ -58,7 +58,15 @@ module.exports.createUser = (req, res, next) => {
       email,
       password: hash,
     })
-      .then((user) => res.status(201).send({ data: user }))
+      .then((user) => res.status(201).send(
+        {
+          _id: user._id,
+          name: user.name,
+          about: user.about,
+          avatar: user.avatar,
+          email: user.email,
+        },
+      ))
       .catch((error) => {
         if (error.name === 'ValidationError') {
           next(new BadRequestErr('Переданы некорректные данные.'));
@@ -101,7 +109,7 @@ module.exports.login = (req, res, next) => {
   User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        return next(new BadRequestErr('Неправильные почта или пароль.'));
+        return next(new AuthErr('Ошибка авторизации'));
       }
       return bcrypt.compare(password, user.password, (err, result) => {
         if (err) {
