@@ -1,7 +1,6 @@
 const Card = require('../models/card');
 
 const BadRequestErr = require('../errors/BadRequestErr_400');
-// const ConflictErr = require('../errors/ConflictErr_409');
 const NotFoundErr = require('../errors/NotFoundErr_404');
 const ForbiddenErr = require('../errors/ForbiddenErr_403');
 
@@ -24,7 +23,7 @@ module.exports.getCards = (req, res, next) => {
 };
 
 module.exports.deleteCard = (req, res, next) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  Card.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
         return next(new NotFoundErr('Карточка не найдена'));
@@ -32,14 +31,10 @@ module.exports.deleteCard = (req, res, next) => {
       if (card.owner.toString() !== req.user._id) {
         return next(new ForbiddenErr('Это чужая карточка!'));
       }
-      return res.send(card);
+      return card.remove();
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        return next(new BadRequestErr('Переданы некорректные данные.'));
-      }
-      return next(err);
-    });
+    .then(() => res.send({ message: 'Карточка удалена' }))
+    .catch(next);
 };
 
 module.exports.likeCard = (req, res, next) => {
@@ -49,17 +44,12 @@ module.exports.likeCard = (req, res, next) => {
     { new: true },
   )
     .then((card) => {
-      if (card === null) {
+      if (!card) {
         return next(new NotFoundErr('Карточка не найдена'));
       }
       return res.send({ data: card });
     })
-    .catch((err) => {
-      if (err.name === 'CastError' || err.name === 'ValidationError') {
-        return next(new BadRequestErr('Переданы некорректные данные.'));
-      }
-      return next(err);
-    });
+    .catch(next);
 };
 
 module.exports.dislikeCard = (req, res, next) => {
@@ -69,15 +59,10 @@ module.exports.dislikeCard = (req, res, next) => {
     { new: true },
   )
     .then((card) => {
-      if (card === null) {
+      if (!card) {
         return next(new NotFoundErr('Карточка не найдена'));
       }
       return res.send({ data: card });
     })
-    .catch((err) => {
-      if (err.name === 'CastError' || err.name === 'ValidationError') {
-        return next(new BadRequestErr('Переданы некорректные данные.'));
-      }
-      return next(err);
-    });
+    .catch(next);
 };

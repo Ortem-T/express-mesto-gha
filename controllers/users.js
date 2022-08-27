@@ -5,7 +5,6 @@ const AuthErr = require('../errors/AuthErr_401');
 const BadRequestErr = require('../errors/BadRequestErr_400');
 const ConflictErr = require('../errors/ConflictErr_409');
 const NotFoundErr = require('../errors/NotFoundErr_404');
-// const ForbiddenErr = require('../errors/ForbiddenErr_403');
 
 const SALT_ROUNDS = 10;
 

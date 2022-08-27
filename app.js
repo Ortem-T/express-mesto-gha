@@ -8,6 +8,7 @@ const { PORT = 3000 } = process.env;
 const app = express();
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
+const NotFoundErr = require('./errors/NotFoundErr_404');
 
 app.use(express.json());
 
@@ -47,8 +48,8 @@ app.use(auth);
 app.use('/', require('./routes/users'));
 app.use('/', require('./routes/cards'));
 
-app.use('*', (req, res) => {
-  res.status(404).send({ message: 'Указанный роут не существует!' });
+app.use('*', (req, res, next) => {
+  next(new NotFoundErr('Указанный роут не существует!'));
 });
 
 app.use(errors());
