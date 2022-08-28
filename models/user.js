@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 
+const regexUrl = require('../utils/constants');
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -18,8 +20,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     validate: {
       validator(str) {
-        const regex = /^(https?:\/\/(www\.)?([a-zA-z0-9-]{1}[a-zA-z0-9-]*\.?)*\.{1}([a-zA-z0-9]){2,8}(\/?([a-zA-z0-9-])*\/?)*\/?([-._~:?#[]@!\$&'\(\)\*\+,;=])*)/;
-        return regex.test(str);
+        return regexUrl.test(str);
       },
     },
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',

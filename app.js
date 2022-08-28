@@ -9,6 +9,7 @@ const app = express();
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const NotFoundErr = require('./errors/NotFoundErr_404');
+const regexUrl = require('./utils/constants');
 
 app.use(express.json());
 
@@ -37,7 +38,7 @@ app.post(
       password: Joi.string().required(),
       name: Joi.string().min(2).max(30),
       about: Joi.string().min(2).max(30),
-      avatar: Joi.string().regex(/^(https?:\/\/(www\.)?([a-zA-z0-9-]){1,}\.?([a-zA-z0-9]){2,8}(\/?([a-zA-z0-9-])*\/?)*\/?([-._~:/?#[]@!\$&'\(\)\*\+,;=])*)/),
+      avatar: Joi.string().regex(regexUrl),
     }),
   }),
   createUser,
