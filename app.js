@@ -9,7 +9,7 @@ const app = express();
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const NotFoundErr = require('./errors/NotFoundErr_404');
-const regexUrl = require('./utils/constants');
+const { regexUrl } = require('./utils/constants');
 
 app.use(express.json());
 

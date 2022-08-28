@@ -5,7 +5,7 @@ const AuthErr = require('../errors/AuthErr_401');
 const BadRequestErr = require('../errors/BadRequestErr_400');
 const ConflictErr = require('../errors/ConflictErr_409');
 const NotFoundErr = require('../errors/NotFoundErr_404');
-const SALT_ROUNDS = require('../utils/constants');
+const { SALT_ROUNDS } = require('../utils/constants');
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})

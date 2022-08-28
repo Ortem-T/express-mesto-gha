@@ -8,7 +8,7 @@ const {
   updateProfile,
   updateAvatar,
 } = require('../controllers/users');
-const regexUrl = require('../utils/constants');
+const { regexUrl } = require('../utils/constants');
 
 router.get('/users', getUsers);
 router.get('/users/me', getCurrentUser);
