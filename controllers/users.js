@@ -68,8 +68,8 @@ module.exports.createUser = (req, res, next) => {
       .catch((error) => {
         if (error.name === 'ValidationError') {
           next(new BadRequestErr('Переданы некорректные данные.'));
-        } else if (error.code === 11000) {
-          next(new ConflictErr('Такой пользователь уже существует!)'));
+        } else if (error.name === 'MongoServerError' && error.code === 11000) {
+          next(new ConflictErr('Такой пользователь уже существует!'));
         } else {
           next(error);
         }
@@ -107,13 +107,13 @@ module.exports.login = (req, res, next) => {
   User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        return next(new AuthErr('Ошибка авторизации'));
+        return next(new AuthErr('Неправильные почта или пароль.'));
       }
       return bcrypt.compare(password, user.password, (err, result) => {
         if (err) {
-          return next(new BadRequestErr('Неправильные почта или пароль.'));
+          return next(new BadRequestErr('Переданы некорректные данные.'));
         } if (!result) {
-          return next(new AuthErr('Ошибка авторизации'));
+          return next(new AuthErr('Неправильные почта или пароль.'));
         }
         const token = jwt.sign(
           { _id: user._id },
