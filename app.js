@@ -10,6 +10,7 @@ const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const NotFoundErr = require('./errors/NotFoundErr_404');
 const { regexUrl } = require('./utils/constants');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 app.use(express.json());
 
@@ -18,6 +19,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 });
 
 app.use(cookieParser());
+
+app.use(requestLogger);
 
 app.post(
   '/signin',
@@ -53,8 +56,9 @@ app.use('*', (req, res, next) => {
   next(new NotFoundErr('Указанный роут не существует!'));
 });
 
-app.use(errors());
+app.use(errorLogger);
 
+app.use(errors());
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
   res
